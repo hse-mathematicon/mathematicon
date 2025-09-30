@@ -4,8 +4,7 @@ API_PREFIX = "/api"
 
 
 def build_api(title: str, version: str) -> FastAPI:
-    api = FastAPI(
+    return FastAPI(
         title=title,
         version=version,
     )
-    return api
