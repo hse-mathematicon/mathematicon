@@ -15,7 +15,10 @@ dependencies = [
     "python-dotenv (>=1.1.1,<2.0.0)",
     "sqlalchemy (>=2.0.43,<3.0.0)",
     "alembic (>=1.16.5,<2.0.0)",
-    "loguru (>=0.7.3,<0.8.0)"
+    "loguru (>=0.7.3,<0.8.0)",
+    "pydantic (>=2.11.9,<3.0.0)",
+    "python-multipart (>=0.0.20,<0.0.21)",
+    "pyyaml (>=6.0.3,<7.0.0)"
 ]
 
 
@@ -26,6 +29,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.13.2"
 mypy = "^1.18.2"
+types-pyyaml = "^6.0.12.20250915"
 
 [tool.ruff]
 target-version = "py39"

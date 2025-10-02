@@ -4,6 +4,9 @@ import uvicorn
 from app.container import AppContainer
 from app.presentation.api.build import build_api, API_PREFIX
 
+container = AppContainer()
+container.wire(packages=["app"])
+
 
 def create_app() -> FastAPI:
 
@@ -18,6 +21,4 @@ def create_app() -> FastAPI:
 
 
 if __name__ == '__main__':
-    container = AppContainer()
-    container.wire(packages=["app"])
     uvicorn.run(**container.server_settings().model_dump())
