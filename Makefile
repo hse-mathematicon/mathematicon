@@ -1,4 +1,4 @@
-.PHONY: lint format start-app migration
+.PHONY: lint format start-app migration migrate-up
 
 lint:
 	poetry run ruff check app tests
@@ -11,3 +11,10 @@ format:
 
 start-app:
 	poetry run python main.py
+
+
+migration:
+	poetry run alembic -c migrations/alembic.ini revision --autogenerate -m "$(message)"
+
+migrate-up:
+	poetry run alembic -c migrations/alembic.ini upgrade head

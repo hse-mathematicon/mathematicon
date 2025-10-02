@@ -1,2 +1,2 @@
 data_path: 'data/'
-db_name: 'mathematicon.db'
+db_name: 'mathematicon-old.db'

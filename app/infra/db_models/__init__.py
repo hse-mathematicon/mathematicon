@@ -1,0 +1,1 @@
+from app.infra.db_models.base import BaseModel
