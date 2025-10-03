@@ -10,7 +10,7 @@ from app.domain.entities.transcripts import (
     TranscriptInfoModel,
     TranscriptUploadModel,
 )
-from app.infra.db_models.transcripts import TranscriptDBModel
+from app.infra.db.models.transcripts import TranscriptDBModel
 
 
 @dataclass

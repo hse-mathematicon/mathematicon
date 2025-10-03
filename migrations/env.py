@@ -4,7 +4,7 @@ from alembic import context
 from loguru import logger
 
 from app.container import AppContainer
-from app.infra.db_models import BaseModel
+from app.infra.db.models import BaseModel
 
 
 # this is the Alembic Config object, which provides

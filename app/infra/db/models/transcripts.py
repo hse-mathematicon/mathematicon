@@ -1,7 +1,7 @@
 from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.infra.db_models.base import BaseModel
+from app.infra.db.models.base import BaseModel
 
 
 class TranscriptDBModel(BaseModel):
