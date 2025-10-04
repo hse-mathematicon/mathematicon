@@ -10,11 +10,12 @@ from app.domain.entities.transcripts import (
     TranscriptInfoModel,
     TranscriptUploadModel,
 )
+from app.domain.services.interfaces.transcripts import TranscriptsInterface
 from app.infra.db.models.transcripts import TranscriptDBModel
 
 
 @dataclass
-class TranscriptsAdapter:
+class TranscriptsAdapter(TranscriptsInterface):
     _db_engine: Engine
     _model: type[TranscriptDBModel] = TranscriptDBModel
 
@@ -53,3 +54,9 @@ class TranscriptsAdapter:
 
         with Session(self._db_engine) as session, session.begin():
             session.execute(query)
+
+    def get_transcript_text(self, transcript_id: int) -> str:
+        query = select(self._model).where(self._model.id == transcript_id)
+
+        with Session(self._db_engine) as session:
+            return session.execute(query).scalar_one().text

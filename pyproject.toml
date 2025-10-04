@@ -18,7 +18,10 @@ dependencies = [
     "loguru (>=0.7.3,<0.8.0)",
     "pydantic (>=2.11.9,<3.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
-    "pyyaml (>=6.0.3,<7.0.0)"
+    "pyyaml (>=6.0.3,<7.0.0)",
+    "spacy (==3.7)",
+    "ru-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/ru_core_news_sm-3.7.0/ru_core_news_sm-3.7.0-py3-none-any.whl",
+    "spacy-conll (>=4.0.1,<5.0.0)"
 ]
 
 

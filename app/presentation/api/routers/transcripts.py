@@ -13,7 +13,7 @@ from app.domain.entities.transcripts import (
     TranscriptInfoModel,
     TranscriptUploadModel,
 )
-from app.infra.adapters.transripts import TranscriptsAdapter
+from app.infra.adapters.storage.transripts import TranscriptsAdapter
 
 router = APIRouter(prefix="/transcripts", tags=["transcripts"])
 
