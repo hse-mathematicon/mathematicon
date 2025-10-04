@@ -7,9 +7,15 @@ from sqlalchemy.engine import Engine
 
 from app.domain.services.grammar_annotation_service import GrammarAnnotationService
 from app.domain.services.interfaces.language_parser import LanguageParserInterface
-from app.infra.adapters import SentencesAdapter, SpacyLanguageParser, TranscriptsAdapter
+from app.domain.services.math_ontology_service import MathOntologyService
+from app.infra.adapters import (
+    MathOntologyAdapter,
+    SentencesAdapter,
+    SpacyLanguageParser,
+    TranscriptsAdapter,
+)
 from app.infra.db.engine import get_engine
-from app.settings import DBSettings, ServerSettings
+from app.settings import DBSettings, RDFSettings, ServerSettings
 from app.variables import PROJECT_DIR
 
 load_dotenv(Path(PROJECT_DIR, ".env"))
@@ -21,6 +27,7 @@ class AppContainer(DeclarativeContainer):
     # Settings
     server_settings: Singleton[ServerSettings] = Singleton(ServerSettings)
     db_settings: Singleton[DBSettings] = Singleton(DBSettings)
+    rdf_settings: Singleton[RDFSettings] = Singleton(RDFSettings)
 
     # Database
     engine: Singleton[Engine] = Singleton(get_engine, db_settings=db_settings.provided)
@@ -30,7 +37,10 @@ class AppContainer(DeclarativeContainer):
         TranscriptsAdapter, _db_engine=engine.provided
     )
     sentences_adapter: Factory[SentencesAdapter] = Factory(
-        SentencesAdapter, _db_engine=engine
+        SentencesAdapter, _db_engine=engine.provided
+    )
+    math_ontology_adapter: Factory[MathOntologyAdapter] = Factory(
+        MathOntologyAdapter, _db_engine=engine.provided
     )
 
     # Other adapters
@@ -44,4 +54,9 @@ class AppContainer(DeclarativeContainer):
         _language_parser=language_parser.provided,
         _transcripts_adapter=transcripts_adapter.provided,
         _sentences_adapter=sentences_adapter.provided,
+    )
+    math_ontology_service: Factory[MathOntologyService] = Factory(
+        MathOntologyService,
+        _rdf_settings=rdf_settings.provided,
+        _ontology_adapter=math_ontology_adapter.provided,
     )
