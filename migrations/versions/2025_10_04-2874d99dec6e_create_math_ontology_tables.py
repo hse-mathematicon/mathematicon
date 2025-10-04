@@ -1,8 +1,8 @@
-"""add math onthology tables
+"""create math ontology tables
 
-Revision ID: 257505d4077b
+Revision ID: 2874d99dec6e
 Revises: c53b87867df0
-Create Date: 2025-10-04 15:54:37.636915
+Create Date: 2025-10-04 17:51:03.019134
 
 """
 from collections.abc import Sequence
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = '257505d4077b'
+revision: str = '2874d99dec6e'
 down_revision: Union[str, Sequence[str], None] = 'c53b87867df0'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,7 +24,6 @@ def upgrade() -> None:
     op.create_table('math_tags',
     sa.Column('inception_id', sa.String(), nullable=False),
     sa.Column('parent_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['parent_id'], ['math_tags.inception_id'], onupdate='CASCADE', ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('inception_id')
     )
     op.create_table('math_tag_attributes',
