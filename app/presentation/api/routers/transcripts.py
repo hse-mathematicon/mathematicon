@@ -14,11 +14,21 @@ from app.domain.entities.transcripts import (
     TranscriptUploadModel,
 )
 from app.infra.adapters.storage.transripts import TranscriptsAdapter
+from app.presentation.api.schemas import ErrorResponseSchema
 
 router = APIRouter(prefix="/transcripts", tags=["transcripts"])
 
 
-@router.post("/uploadfile")
+@router.post(
+    "/uploadfile",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_409_CONFLICT: {
+            "description": "Transcript already exists",
+            "model": ErrorResponseSchema,
+        }
+    },
+)
 @inject
 def upload_transcript_file(
     file: UploadFile,
@@ -60,7 +70,10 @@ def upload_transcript_file(
     return transcripts_adapter.add_transcript(transcript)
 
 
-@router.get("/{id}/info")
+@router.get(
+    "/{id}/info",
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Transcript not found"}},
+)
 @inject
 def get_transcript_info(
     id: int,
@@ -85,7 +98,7 @@ def get_transcripts_info_by_filters(
     return transcripts_adapter.get_transcripts_info_by_filters(filters=filters)
 
 
-@router.delete("/{id}")
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def delete_transcript(
     id: int,

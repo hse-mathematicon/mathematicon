@@ -13,7 +13,7 @@ from app.infra.adapters.storage.transripts import TranscriptsAdapter
 router = APIRouter(prefix="/grammar_annotation", tags=["grammar_annotation"])
 
 
-@router.post("/{transcript_id}/generate")
+@router.post("/{transcript_id}/generate", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def parse_transcript(
     transcript_id: int,
@@ -25,7 +25,11 @@ def parse_transcript(
     grammar_annotation_service.parse(transcript_id)
 
 
-@router.get("/{transcript_id}/conllu", response_class=StreamingResponse)
+@router.get(
+    "/{transcript_id}/conllu",
+    response_class=StreamingResponse,
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Transcript not found."}},
+)
 @inject
 def get_transcript_conllu(
     transcript_id: int,
@@ -49,7 +53,7 @@ def get_transcript_conllu(
     )
 
 
-@router.delete("/{transcript_id}")
+@router.delete("/{transcript_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
 def delete_transcript_grammar_annotation(
     transcript_id: int,
