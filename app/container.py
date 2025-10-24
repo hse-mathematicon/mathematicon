@@ -15,6 +15,7 @@ from app.infra.adapters import (
     TranscriptsAdapter,
 )
 from app.infra.db.engine import get_engine
+from app.infra.adapters.storage.pos_tags import POSTagAdapter
 from app.settings import DBSettings, RDFSettings, ServerSettings
 from app.variables import PROJECT_DIR
 
@@ -41,6 +42,10 @@ class AppContainer(DeclarativeContainer):
     )
     math_ontology_adapter: Factory[MathOntologyAdapter] = Factory(
         MathOntologyAdapter, _db_engine=engine.provided
+    )
+    pos_tag_adapter: Factory[POSTagAdapter] = Factory(
+        POSTagAdapter,
+        _db_engine=engine.provided
     )
 
     # Other adapters
