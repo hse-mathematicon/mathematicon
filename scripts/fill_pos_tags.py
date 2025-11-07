@@ -19,7 +19,7 @@ def fill_pos_tags():
         ("PART", "https://universaldependencies.org/u/pos/PART.html", "частица", "particle", "вот, же, ну"),
         ("PRON", "https://universaldependencies.org/u/pos/PRON.html", "местоимение", "pronoun", "я, вы, который"),
         ("PROPN", "https://universaldependencies.org/u/pos/PROPN.html", "имя собственное", "proper noun", "Коши, Ньютон"),
-        ("PTCP", "https://universaldependencies.org/u/pos/VERB.html", "причастие", "participle", "стремищийся, изображённый"),
+        ("PTCP|VERB", "https://universaldependencies.org/ru/pos/VERB.html", "причастие", "participle", "стремищийся, изображённый"),
         ("PUNCT", "https://universaldependencies.org/u/pos/PUNCT.html", "пунктуация", "punctuation", ". ?"),
         ("SCONJ", "https://universaldependencies.org/u/pos/SCONJ.html", "подчинительный союз", "subordinating conjunction", "если, как, что"),
         ("VERB", "https://universaldependencies.org/u/pos/VERB.html", "глагол", "verb", "разобрать, вынести, умножить"),
