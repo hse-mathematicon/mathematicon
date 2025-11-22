@@ -7,8 +7,10 @@ from sqlalchemy.engine import Engine
 
 from app.domain.services.grammar_annotation_service import GrammarAnnotationService
 from app.domain.services.interfaces.language_parser import LanguageParserInterface
+from app.domain.services.math_annotation_service import MathAnnotationService
 from app.domain.services.math_ontology_service import MathOntologyService
 from app.infra.adapters import (
+    MathAnnotationAdapter,
     MathOntologyAdapter,
     SentencesAdapter,
     SpacyLanguageParser,
@@ -42,6 +44,9 @@ class AppContainer(DeclarativeContainer):
     math_ontology_adapter: Factory[MathOntologyAdapter] = Factory(
         MathOntologyAdapter, _db_engine=engine.provided
     )
+    math_annotation_adapter: Factory[MathAnnotationAdapter] = Factory(
+        MathAnnotationAdapter, _db_engine=engine.provided
+    )
 
     # Other adapters
     language_parser: Factory[LanguageParserInterface] = Factory(
@@ -59,4 +64,9 @@ class AppContainer(DeclarativeContainer):
         MathOntologyService,
         _rdf_settings=rdf_settings.provided,
         _ontology_adapter=math_ontology_adapter.provided,
+    )
+    math_annotation_service: Factory[MathAnnotationService] = Factory(
+        MathAnnotationService,
+        _math_annotation_adapter=math_annotation_adapter.provided,
+        _inception_tag_prefix=rdf_settings.provided.base_prefix,
     )
