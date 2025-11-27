@@ -4,7 +4,7 @@ from sqlalchemy import delete, insert, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from app.domain.entities.sentences import ParsedSentenceModel
+from app.domain.entities.sentences import SentencePutModel
 from app.domain.services.interfaces.sentences import SentencesInterface
 from app.infra.db.models.sentences import SentenceDBModel, TokenDBModel
 
@@ -15,18 +15,12 @@ class SentencesAdapter(SentencesInterface):
     _sent_model: type[SentenceDBModel] = SentenceDBModel
     _token_model: type[TokenDBModel] = TokenDBModel
 
-    def put_sentence(
-        self, transcript_id: int, parsed_sentence: ParsedSentenceModel
-    ) -> int:
+    def put_sentence(self, transcript_id: int, sentence: SentencePutModel) -> int:
         with Session(self._db_engine) as session, session.begin():
             sent_insert_query = (
                 insert(self._sent_model)
                 .values(
-                    **(
-                        parsed_sentence.model_dump(
-                            exclude_none=True, exclude={"tokens"}
-                        )
-                    )
+                    **(sentence.model_dump(exclude_none=True, exclude={"tokens"}))
                     | {"transcript_id": transcript_id}
                 )
                 .returning(self._sent_model.id)
@@ -37,7 +31,7 @@ class SentencesAdapter(SentencesInterface):
                 insert(self._token_model),
                 [
                     {"sent_id": sent_id} | token.model_dump(exclude_none=True)
-                    for token in parsed_sentence.tokens
+                    for token in sentence.tokens
                 ],
             )
 

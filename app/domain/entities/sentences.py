@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class TokenInSentenceModel(BaseModel):
+class TokenPutModel(BaseModel):
     position: int
     text: str
     lemma: str
@@ -12,8 +12,8 @@ class TokenInSentenceModel(BaseModel):
     char_end: int
 
 
-class ParsedSentenceModel(BaseModel):
+class SentencePutModel(BaseModel):
     position: int
     text: str
     lemmatized_text: str
-    tokens: list[TokenInSentenceModel]
+    tokens: list[TokenPutModel]

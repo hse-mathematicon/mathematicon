@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import spacy
 
-from app.domain.entities.sentences import ParsedSentenceModel, TokenInSentenceModel
+from app.domain.entities.sentences import SentencePutModel, TokenPutModel
 from app.domain.services.interfaces.language_parser import LanguageParserInterface
 
 
@@ -14,17 +14,17 @@ class SpacyLanguageParser(LanguageParserInterface):
                 "conll_formatter", last=True, config={"include_headers": True}
             )
 
-    def parse(self, text: str) -> Iterable[ParsedSentenceModel]:
+    def parse(self, text: str) -> Iterable[SentencePutModel]:
         doc = self._nlp(text)
         res = []
         for i, sent in enumerate(doc.sents):
-            parsed_sent = ParsedSentenceModel(
+            parsed_sent = SentencePutModel(
                 tokens=[], position=i, text=sent.text, lemmatized_text=""
             )
             char_offset = 0
             for i, token in enumerate(sent):
                 parsed_sent.tokens.append(
-                    TokenInSentenceModel(
+                    TokenPutModel(
                         position=i,
                         text=token.text,
                         lemma=token.lemma_,
