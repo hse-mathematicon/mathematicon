@@ -14,7 +14,7 @@ from app.domain.entities.transcripts import (
     TranscriptUploadModel,
 )
 from app.infra.adapters.storage.transripts import TranscriptsAdapter
-from app.presentation.api.schemas import ErrorResponseSchema
+from app.presentation.api.schemas.common import ErrorResponseSchema
 
 router = APIRouter(prefix="/transcripts", tags=["transcripts"])
 

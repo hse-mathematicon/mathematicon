@@ -9,6 +9,7 @@ from app.domain.services.grammar_annotation_service import GrammarAnnotationServ
 from app.domain.services.interfaces.language_parser import LanguageParserInterface
 from app.domain.services.math_annotation_service import MathAnnotationService
 from app.domain.services.math_ontology_service import MathOntologyService
+from app.domain.services.math_tag_search import MathTagSearchService
 from app.infra.adapters import (
     MathAnnotationAdapter,
     MathOntologyAdapter,
@@ -69,4 +70,7 @@ class AppContainer(DeclarativeContainer):
         MathAnnotationService,
         _math_annotation_adapter=math_annotation_adapter.provided,
         _inception_tag_prefix=rdf_settings.provided.base_prefix,
+    )
+    math_tag_search_service: Factory[MathTagSearchService] = Factory(
+        MathTagSearchService
     )
