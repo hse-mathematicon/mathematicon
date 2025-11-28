@@ -1,6 +1,7 @@
+from collections import defaultdict
 from dataclasses import dataclass
 
-from sqlalchemy import delete, insert
+from sqlalchemy import delete, insert, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
@@ -38,3 +39,21 @@ class MathOntologyAdapter(MathOntologyInterface):
         with Session(self._db_engine) as session, session.begin():
             session.execute(delete(self._tag_attr_model))
             session.execute(delete(self._tag_model))
+
+    def get_tag_descendants(self, math_tag_id: str) -> list[str]:
+        with Session(self._db_engine) as session:
+            tags = session.execute(select(self._tag_model)).scalars().all()
+
+        children_map = defaultdict(list)
+        for tag in tags:
+            children_map[tag.parent_id].append(tag.inception_id)
+
+        result = []
+        stack = children_map.get(math_tag_id, [])
+
+        while stack:
+            child = stack.pop()
+            result.append(child)
+            stack.extend(children_map.get(child, []))
+
+        return result

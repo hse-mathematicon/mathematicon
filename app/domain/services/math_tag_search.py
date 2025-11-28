@@ -51,7 +51,7 @@ class MathTagSearchService:
                 if transcript_info is None:
                     logger.warning(f"Failed to get {transcript_info=}")
                     continue
-                transcripts_info[sent_id] = transcript_info
+                transcripts_info[sentence.transcript_id] = transcript_info
 
             sentences[sent_id] = sentence
 
@@ -59,7 +59,7 @@ class MathTagSearchService:
         for sent_id in sentences:
             result.append(
                 MathTagSentenceMatchInfo(
-                    transcript_info=transcripts_info[sent_id],
+                    transcript_info=transcripts_info[sentences[sent_id].transcript_id],
                     sent_info=self._create_search_result_sentence_info(
                         sentences[sent_id]
                     ),

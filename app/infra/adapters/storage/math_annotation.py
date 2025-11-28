@@ -4,10 +4,14 @@ from sqlalchemy import delete, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from app.domain.entities.math_annotation import MathEntityPutModel
+from app.domain.entities.math_annotation import (
+    MathEntityGetFilterModel,
+    MathEntityModel,
+    MathEntityPutModel,
+)
 from app.domain.services.interfaces.math_annotation import MathAnnotationInterface
 from app.infra.db.models.math_annotation import MathEntityDBModel
-from app.infra.db.models.sentences import SentenceDBModel
+from app.infra.db.models.sentences import SentenceDBModel, TokenDBModel
 
 
 @dataclass
@@ -15,6 +19,7 @@ class MathAnnotationAdapter(MathAnnotationInterface):
     _db_engine: Engine
     _math_entity_model: type[MathEntityDBModel] = MathEntityDBModel
     _sent_model: type[SentenceDBModel] = SentenceDBModel
+    _token_model: type[TokenDBModel] = TokenDBModel
 
     def put_math_entities(
         self, transcript_id: int, math_entities: list[MathEntityPutModel]
@@ -52,3 +57,35 @@ class MathAnnotationAdapter(MathAnnotationInterface):
             )
 
             session.execute(query)
+
+    def get_math_entities(
+        self, filters: MathEntityGetFilterModel
+    ) -> list[MathEntityModel]:
+        query = select(
+            self._math_entity_model.id,
+            self._math_entity_model.math_tag_id,
+            self._math_entity_model.sent_id,
+            self._token_model.position,
+        ).join(
+            self._token_model,
+            (self._token_model.sent_id == self._math_entity_model.sent_id)
+            & (self._token_model.char_start >= self._math_entity_model.char_start)
+            & (self._token_model.char_end <= self._math_entity_model.char_end),
+        )
+        if filters.math_tag_id_in:
+            query.filter(
+                self._math_entity_model.math_tag_id.in_(filters.math_tag_id_in)
+            )
+
+        entities = {}
+        with Session(self._db_engine) as session:
+            result = session.execute(query).all()
+            for res in result:
+                if res[0] not in entities:
+                    entities[res[0]] = MathEntityModel(
+                        math_tag_id=res[1], sent_id=res[2], tokens_position=[res[3]]
+                    )
+                else:
+                    entities[res[0]].tokens_position.append(res[3])
+
+        return list(entities.values())

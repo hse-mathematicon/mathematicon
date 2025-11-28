@@ -72,5 +72,9 @@ class AppContainer(DeclarativeContainer):
         _inception_tag_prefix=rdf_settings.provided.base_prefix,
     )
     math_tag_search_service: Factory[MathTagSearchService] = Factory(
-        MathTagSearchService
+        MathTagSearchService,
+        _transcripts_adapter=transcripts_adapter.provided,
+        _sentences_adapter=sentences_adapter.provided,
+        _ontology_adapter=math_ontology_adapter.provided,
+        _math_annotation_adapter=math_annotation_adapter.provided,
     )

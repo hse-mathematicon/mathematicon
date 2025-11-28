@@ -28,6 +28,8 @@ class TokenInfoModel(BaseModel):
     pos: str
     whitespace: bool
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class SentenceInfoModel(BaseModel):
     id: int
