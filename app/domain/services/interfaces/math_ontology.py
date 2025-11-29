@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from app.domain.entities.math_ontology import MathTagModel
+from app.domain.entities.math_ontology import MathTagGetFilterModel, MathTagModel
 
 
 class MathOntologyInterface(Protocol):
@@ -10,3 +10,6 @@ class MathOntologyInterface(Protocol):
 
     @abstractmethod
     def get_tag_descendants(self, math_tag_id: str) -> list[str]: ...
+
+    @abstractmethod
+    def get_math_tags(self, filters: MathTagGetFilterModel) -> list[MathTagModel]: ...

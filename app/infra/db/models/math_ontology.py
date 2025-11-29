@@ -1,7 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.infra.db.models.base import BaseModel
 
@@ -11,6 +11,8 @@ class MathTagDBModel(BaseModel):
 
     inception_id: Mapped[str] = mapped_column(primary_key=True)
     parent_id: Mapped[Optional[str]] = mapped_column()
+
+    atts: Mapped[list["MathTagAttributeDBModel"]] = relationship(lazy="select")
 
 
 class MathTagAttributeDBModel(BaseModel):
