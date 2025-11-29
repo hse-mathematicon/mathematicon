@@ -31,6 +31,7 @@ class MathTagSearchService:
         math_tags = [math_tag_id] + self._ontology_adapter.get_tag_descendants(
             math_tag_id
         )
+        logger.info(f"Searching for {math_tags=}")
         math_entities = self._math_annotation_adapter.get_math_entities(
             MathEntityGetFilterModel(math_tag_id_in=math_tags)
         )

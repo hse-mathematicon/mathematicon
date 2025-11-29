@@ -73,7 +73,7 @@ class MathAnnotationAdapter(MathAnnotationInterface):
             & (self._token_model.char_end <= self._math_entity_model.char_end),
         )
         if filters.math_tag_id_in:
-            query.filter(
+            query = query.filter(
                 self._math_entity_model.math_tag_id.in_(filters.math_tag_id_in)
             )
 
