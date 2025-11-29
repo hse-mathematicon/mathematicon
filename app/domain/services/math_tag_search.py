@@ -4,7 +4,10 @@ from typing import Optional
 
 from loguru import logger
 
-from app.domain.entities.math_annotation import MathEntityGetFilterModel
+from app.domain.entities.math_annotation import (
+    MathEntityGetFilterModel,
+    MathEntityModel,
+)
 from app.domain.entities.search import (
     MathTagSentenceMatchInfo,
     SearchResultSentenceInfo,
@@ -32,7 +35,7 @@ class MathTagSearchService:
             MathEntityGetFilterModel(math_tag_id_in=math_tags)
         )
 
-        math_entities_by_sent = defaultdict(list)
+        math_entities_by_sent: dict[int, list[MathEntityModel]] = defaultdict(list)
         for ent in math_entities:
             math_entities_by_sent[ent.sent_id].append(ent)
 
@@ -64,6 +67,11 @@ class MathTagSearchService:
                         sentences[sent_id]
                     ),
                     math_entities=math_entities_by_sent[sent_id],
+                    matched_tokens=[
+                        t
+                        for ent in math_entities_by_sent[sent_id]
+                        for t in ent.tokens_position
+                    ],
                 )
             )
         return result

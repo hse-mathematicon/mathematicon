@@ -19,6 +19,7 @@ class SearchResultSentenceInfo(BaseModel):
 
 
 class MathTagSentenceMatchInfo(BaseModel):
+    math_entities: list[MathEntityModel]
+    matched_tokens: list[int]
     transcript_info: SearchResultTranscriptInfo
     sent_info: SearchResultSentenceInfo
-    math_entities: list[MathEntityModel]
