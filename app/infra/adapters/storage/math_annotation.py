@@ -89,3 +89,15 @@ class MathAnnotationAdapter(MathAnnotationInterface):
                     entities[res[0]].tokens_position.append(res[3])
 
         return list(entities.values())
+
+    def check_math_entities_exist(self, filters: MathEntityGetFilterModel) -> bool:
+        query = select(self._math_entity_model)
+
+        if filters.transcript_id:
+            query = query.join(
+                self._sent_model, self._math_entity_model.sent_id == self._sent_model.id
+            ).where(self._sent_model.transcript_id == filters.transcript_id)
+
+        with Session(self._db_engine) as session:
+            result = session.execute(query).scalars().all()
+            return bool(result)

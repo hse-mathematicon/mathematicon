@@ -22,3 +22,4 @@ class MathEntityModel(BaseModel):
 
 class MathEntityGetFilterModel(BaseModel):
     math_tag_id_in: Optional[list[str]] = None
+    transcript_id: Optional[int] = None

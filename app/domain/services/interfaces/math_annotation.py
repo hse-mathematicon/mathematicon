@@ -19,3 +19,6 @@ class MathAnnotationInterface(Protocol):
     def get_math_entities(
         self, filters: MathEntityGetFilterModel
     ) -> list[MathEntityModel]: ...
+
+    @abstractmethod
+    def check_math_entities_exist(self, filters: MathEntityGetFilterModel) -> bool: ...
