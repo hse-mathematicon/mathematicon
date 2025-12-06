@@ -18,3 +18,6 @@ migration:
 
 migrate-up:
 	poetry run alembic -c migrations/alembic.ini upgrade head
+
+migrate-down:
+	poetry run alembic -c migrations/alembic.ini downgrade -1

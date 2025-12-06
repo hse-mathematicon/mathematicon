@@ -49,7 +49,11 @@ Alembic может автоматически генерировать таки�
 ```shell
 make migration message="your migration description"
 ```
-Чтобы применить миграции:
+Накатить миграцию до самой последней версии:
 ```shell
 make migrate-up
+```
+Откатить миграцию:
+```shell
+make migrate-down
 ```
