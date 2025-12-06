@@ -27,12 +27,13 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('inception_id')
     )
     op.create_table('math_tag_attributes',
+    sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('math_tag_id', sa.String(), nullable=False),
     sa.Column('key', sa.String(), nullable=False),
     sa.Column('value', sa.String(), nullable=False),
     sa.Column('language', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['math_tag_id'], ['math_tags.inception_id'], ),
-    sa.PrimaryKeyConstraint('math_tag_id', 'key', 'language')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

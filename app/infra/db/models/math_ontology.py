@@ -18,9 +18,8 @@ class MathTagDBModel(BaseModel):
 class MathTagAttributeDBModel(BaseModel):
     __tablename__ = "math_tag_attributes"
 
-    math_tag_id: Mapped[str] = mapped_column(
-        ForeignKey("math_tags.inception_id"), primary_key=True
-    )
-    key: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
+    math_tag_id: Mapped[str] = mapped_column(ForeignKey("math_tags.inception_id"))
+    key: Mapped[str] = mapped_column()
     value: Mapped[str] = mapped_column()
-    language: Mapped[str] = mapped_column(primary_key=True)
+    language: Mapped[str] = mapped_column()
