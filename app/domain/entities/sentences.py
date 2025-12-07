@@ -1,7 +1,9 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
-class TokenInSentenceModel(BaseModel):
+class TokenPutModel(BaseModel):
     position: int
     text: str
     lemma: str
@@ -12,8 +14,34 @@ class TokenInSentenceModel(BaseModel):
     char_end: int
 
 
-class ParsedSentenceModel(BaseModel):
+class SentencePutModel(BaseModel):
     position: int
     text: str
     lemmatized_text: str
-    tokens: list[TokenInSentenceModel]
+    tokens: list[TokenPutModel]
+
+
+class TokenInfoModel(BaseModel):
+    position: int
+    text: str
+    lemma: str
+    pos: str
+    whitespace: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SentenceInfoModel(BaseModel):
+    id: int
+    transcript_id: int
+    position: int
+    text: str
+    timecode_start: Optional[str]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SentenceFilterModel(BaseModel):
+    id: Optional[int] = None
+    transcript_id: Optional[int] = None
+    position: Optional[int] = None

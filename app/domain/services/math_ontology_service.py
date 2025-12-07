@@ -56,7 +56,6 @@ class MathOntologyService:
             try:
                 attrs.append(
                     MathTagAttributeModel(
-                        math_tag_id=math_tag_id,
                         key=tag.name,
                         language=str(tag.get("xml:lang")),
                         value=tag.get_text(strip=True),
