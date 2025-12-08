@@ -45,3 +45,8 @@ class SentenceFilterModel(BaseModel):
     id: Optional[int] = None
     transcript_id: Optional[int] = None
     position: Optional[int] = None
+
+
+class GrammarAnnotationStatsModel(BaseModel):
+    sentence_count: int
+    token_count: int

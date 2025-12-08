@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import Optional, Protocol
 
 from app.domain.entities.sentences import (
+    GrammarAnnotationStatsModel,
     SentenceFilterModel,
     SentenceInfoModel,
     SentencePutModel,
@@ -23,3 +24,8 @@ class SentencesInterface(Protocol):
 
     @abstractmethod
     def get_sentence_tokens(self, sent_id: int) -> list[TokenInfoModel]: ...
+
+    @abstractmethod
+    def get_grammar_annotation_stats(
+        self, transcript_id: int
+    ) -> Optional[GrammarAnnotationStatsModel]: ...

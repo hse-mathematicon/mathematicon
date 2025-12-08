@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from sqlalchemy import delete, insert, select
+from sqlalchemy import delete, distinct, func, insert, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
 from app.domain.entities.sentences import (
+    GrammarAnnotationStatsModel,
     SentenceFilterModel,
     SentenceInfoModel,
     SentencePutModel,
@@ -86,3 +87,32 @@ class SentencesAdapter(SentencesInterface):
         with Session(self._db_engine) as session:
             tokens = session.execute(query)
             return [TokenInfoModel.model_validate(info) for info in tokens.scalars()]
+
+    def get_grammar_annotation_stats(
+        self, transcript_id: int
+    ) -> Optional[GrammarAnnotationStatsModel]:
+        query = (
+            select(
+                func.count(distinct(self._sent_model.id)).label("sentence_count"),
+                func.count(self._token_model.position).label("token_count"),
+            )
+            .select_from(self._sent_model)
+            .join(
+                self._token_model,
+                self._token_model.sent_id == self._sent_model.id,
+                isouter=True,
+            )
+            .where(self._sent_model.transcript_id == transcript_id)
+        )
+
+        with Session(self._db_engine) as session:
+            result = session.execute(query).one()
+
+            return (
+                GrammarAnnotationStatsModel(
+                    sentence_count=result.sentence_count,
+                    token_count=result.token_count,
+                )
+                if result.sentence_count
+                else None
+            )
