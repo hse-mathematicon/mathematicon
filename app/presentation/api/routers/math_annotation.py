@@ -7,13 +7,14 @@ from app.container import AppContainer
 from app.domain.entities.math_annotation import MathEntityGetFilterModel
 from app.domain.services.math_annotation_service import MathAnnotationService
 from app.infra.adapters.storage.math_annotation import MathAnnotationAdapter
+from app.presentation.api.schemas.common import OperationResultSchema, WarningSchema
 
 router = APIRouter(prefix="/math_annotation", tags=["math_annotation"])
 
 
 @router.post(
     "/{transcript_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_201_CREATED,
     responses={
         status.HTTP_409_CONFLICT: {"description": "Math annotation already exists."}
     },
@@ -28,7 +29,7 @@ def upload_xmi(
     math_annotation_service: Annotated[
         MathAnnotationService, Depends(Provide[AppContainer.math_annotation_service])
     ],
-) -> None:
+) -> OperationResultSchema:
     if math_annotation_adapter.check_math_entities_exist(
         MathEntityGetFilterModel(transcript_id=transcript_id)
     ):
@@ -36,7 +37,10 @@ def upload_xmi(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Math annotation for {transcript_id=} already exists.",
         )
-    math_annotation_service.load_math_annotation(transcript_id, xmi_file.file)
+    warnings = math_annotation_service.load_math_annotation(
+        transcript_id, xmi_file.file
+    )
+    return OperationResultSchema(warnings=[WarningSchema(detail=m) for m in warnings])
 
 
 @router.delete("/{transcript_id}", status_code=status.HTTP_204_NO_CONTENT)
