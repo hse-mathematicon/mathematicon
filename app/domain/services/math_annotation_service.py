@@ -10,8 +10,9 @@ from app.domain.entities.math_annotation import (
     AnnotationSpanPutModel,
     MathEntityPutModel,
 )
-from app.domain.services.exceptions import ParseError
+from app.domain.services.exceptions import ParseError, ValidationError
 from app.domain.services.interfaces.math_annotation import MathAnnotationInterface
+from app.domain.services.interfaces.sentences import SentencesInterface
 
 
 class SentenceXMLTag(BaseModel):
@@ -27,9 +28,15 @@ class MathEntityXMLTag(BaseModel):
     math_tag: str
 
 
+class AnnotationFileStats(BaseModel):
+    sentence_count: int
+    token_count: int
+
+
 @dataclass
 class MathAnnotationService:
     _math_annotation_adapter: MathAnnotationInterface
+    _sentences_adapter: SentencesInterface
     _inception_tag_prefix: str
 
     def load_math_annotation(
@@ -39,6 +46,8 @@ class MathAnnotationService:
         error_messages: list[str] = []
 
         soup = BeautifulSoup(annotation_file, features="xml")
+        self._validate_math_annotation(transcript_id, soup)
+
         sentence_tags = self._extract_sentence_tags(soup)
         math_entity_tags = self._extract_math_entity_tags(soup, error_messages)
         math_entities = self._construct_math_entities(
@@ -51,6 +60,35 @@ class MathAnnotationService:
         )
 
         return error_messages
+
+    def _validate_math_annotation(
+        self,
+        transcript_id: int,
+        soup: BeautifulSoup,
+    ) -> None:
+        logger.debug("Validating file content.")
+        local_stats = self._sentences_adapter.get_grammar_annotation_stats(
+            transcript_id
+        )
+        if not local_stats:
+            raise ValidationError("There is no grammar annotaion for this transcript.")
+
+        file_stats = self._get_annotation_file_stats(soup)
+
+        if (
+            local_stats.sentence_count != file_stats.sentence_count
+            or local_stats.token_count != file_stats.token_count
+        ):
+            raise ValidationError(
+                f"There is a mismatch between local grammar annotation "
+                f"and file content: {local_stats=}, {file_stats=}"
+            )
+
+    def _get_annotation_file_stats(self, soup: BeautifulSoup) -> AnnotationFileStats:
+        return AnnotationFileStats(
+            sentence_count=len(soup.find_all("type5:Sentence")),
+            token_count=len(soup.find_all("type5:Token")),
+        )
 
     def _extract_sentence_tags(self, soup: BeautifulSoup) -> list[SentenceXMLTag]:
         sentences = []

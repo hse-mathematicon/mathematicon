@@ -68,6 +68,7 @@ class AppContainer(DeclarativeContainer):
     )
     math_annotation_service: Factory[MathAnnotationService] = Factory(
         MathAnnotationService,
+        _sentences_adapter=sentences_adapter.provided,
         _math_annotation_adapter=math_annotation_adapter.provided,
         _inception_tag_prefix=rdf_settings.provided.base_prefix,
     )
